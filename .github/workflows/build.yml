@@ -19,6 +19,8 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
 
       - name: Install Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -32,18 +34,18 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vividpulse-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/*.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
-        if: github.event_name == 'push'
+        if: success()
         with:
           tag_name: v1.0.0
           name: Vivid Pulse v1.0.0
           body: |
             Native Kotlin + Jetpack Compose Android app.
             Download the APK and install on any Android device.
-            No web wrapper — pure native.
-          files: app/build/outputs/apk/debug/app-debug.apk
+            No web wrapper — pure native. Ready to use.
+          files: app/build/outputs/apk/debug/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
